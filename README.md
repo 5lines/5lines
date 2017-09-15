@@ -4,7 +4,7 @@
 
 # Submit your own
 
-Just submit a pull request in whatever language you like. :thumb: 
+Just submit a pull request in whatever language you like. :thumbsup: 
 
 Files for each language are called `<languagename>.<ext>`, for example, `javascript.js`. 
 
