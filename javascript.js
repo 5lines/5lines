@@ -24,3 +24,24 @@ function rcode(s = 1) {
   const ranbytes = Array.from(ran8s).map( b => String.fromCodePoint(b) );
   return btoa(ranbytes.join(''));
 }
+
+// @dmitriid
+// Run Promises one by one, in sequence. Stop and return error when a Promise errors
+// Useful when you need to run, e.g., sequential fetches from a remote API where
+// order matters.
+// Usage: seq([ fun(), fun1(), fun2()  ]).then().catch()
+// Each fun must return a Promise
+function seq(tasks) {
+    return new Promise((resolve, reject) => {
+        let task = null;
+        // As long as there are tasks, keep going: extract a new task
+        // and check that it isn't a task we've already prcessed
+        while (tasks.length > 0 && !(task = tasks.shift())) {}
+        // we're out of tasks, resolve the promise
+        if (!task) { resolve(); return; }
+        // execute the current task. 
+        // on promise success, recurse into seq
+        // on error, reject
+        task().then((result) => { seq(tasks).then(resolve).catch(reject); }) .catch((e) => {reject(e);});
+    });
+}
