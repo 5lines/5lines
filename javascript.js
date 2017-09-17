@@ -45,3 +45,22 @@ function seq(tasks) {
         task().then((result) => { seq(tasks).then(resolve).catch(reject); }) .catch((e) => {reject(e);});
     });
 }
+
+// @dosyago-coder-0
+// project object slots, e.g. project({a:1,b:{c:2}}, 'b.c') -> {'b.c':2}
+function project( obj, ...slots ) {
+  slots = new Set(slots);
+  const pslots = Object.keys( obj ).filter( k => slots.has(k) );
+  return pslots.reduce( (p,k) => (k.includes('.') ? p[k] = resolve(obj,k) : p[k]=obj[k],p), {});
+}
+
+// @dosyago-coder-0
+// resolve slot path, e.g. resolve({a:{b:1}}, 'a.b') -> 1
+function resolve( obj, path ) {
+  // FIXME: if key == '.' this will break. :)
+  path = path.split(/\./g);
+  while(obj !== null && obj !== undefined && path.length) {
+    obj = obj[path.shift()];
+  }
+  return obj;
+}
